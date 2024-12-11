@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Cipher Application</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6e7dff, #84a9ff);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Container */
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);  /* Effect blur */
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+        }
+
+        /* Textarea and Input */
+        textarea, input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1.2rem;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: none;
+        }
+
+        input[type="number"] {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        /* Button Styles */
+        button {
+            background-color: #6e7dff;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #4f60e1;
+        }
+
+        /* Output Box */
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            color: #333;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            min-height: 100px;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        /* Watermark Bottom Center */
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Shift Cipher Application</h1>
+        
+        <div class="input-container">
+            <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+            <input id="shiftValue" type="number" placeholder="Enter shift value (for encrypt/decrypt)">
+        </div>
+        
+        <div>
+            <button onclick="encryptText()">Encrypt</button>
+            <button onclick="decryptText()">Decrypt</button>
+            <button onclick="bruteForceDecrypt()">Brute Force Decrypt</button>
+        </div>
+
+        <div class="output" id="output"></div>
+    </div>
+
+    <div class="watermark">
+        Create by Afra Fadhma Dinata
+    </div>
+
+    <script>
+        function shiftCipher(text, shift) {
+            let result = "";
+            for (let char of text) {
+                if (/[a-zA-Z]/.test(char)) {
+                    const isUpper = char === char.toUpperCase();
+                    const base = isUpper ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
+                    const shifted = String.fromCharCode(((char.charCodeAt(0) - base + shift) % 26 + 26) % 26 + base);
+                    result += shifted;
+                } else {
+                    result += char;
+                }
+            }
+            return result;
+        }
+
+        function encryptText() {
+            const text = document.getElementById("inputText").value;
+            const shift = parseInt(document.getElementById("shiftValue").value);
+            if (isNaN(shift)) {
+                alert("Please enter a valid shift value.");
+                return;
+            }
+            const result = shiftCipher(text, shift);
+            document.getElementById("output").innerText = "Encrypted Text:\n" + result;
+        }
+
+        function decryptText() {
+            const text = document.getElementById("inputText").value;
+            const shift = parseInt(document.getElementById("shiftValue").value);
+            if (isNaN(shift)) {
+                alert("Please enter a valid shift value.");
+                return;
+            }
+            const result = shiftCipher(text, -shift);
+            document.getElementById("output").innerText = "Decrypted Text:\n" + result;
+        }
+
+        function bruteForceDecrypt() {
+            const text = document.getElementById("inputText").value;
+            let results = "Brute Force Results:\n\n";
+            for (let shift = 0; shift < 26; shift++) {
+                results += `Shift ${shift}: ${shiftCipher(text, -shift)}\n`;
+            }
+            document.getElementById("output").innerText = results;
+        }
+    </script>
+</body>
+</html>
